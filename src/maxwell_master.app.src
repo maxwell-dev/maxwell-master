@@ -1,0 +1,20 @@
+{application, maxwell_master,
+  [{description, "The master of maxwell project."},
+    {vsn, "0.1.0"},
+    {registered, []},
+    {mod, {maxwell_master_app, []}},
+    {applications, [
+      kernel,
+      stdlib,
+      lager,
+%%      lifebook,
+%%      guid,
+      maxwell_protocol,
+      maxwell_server
+    ]},
+    {env, []},
+    {modules, []},
+    {maintainers, []},
+    {licenses, ["Apache 2.0"]},
+    {links, []}
+  ]}.
