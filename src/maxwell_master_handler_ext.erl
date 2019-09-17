@@ -12,8 +12,6 @@
 
 -export([
   init/1,
-  pre_pull/2,
-  pre_push/2,
   handle/2,
   terminate/2
 ]).
@@ -35,11 +33,6 @@ init(Req) ->
   },
   lager:debug("Initializing handler_ext: state: ~p", [State]),
   State.
-
-pre_pull(_Msg, _State) ->
-  ok.
-pre_push(_Msg, _State) ->
-  ok.
 
 %% frontend-master part
 handle(#register_frontend_req_t{ref = Ref} = Req, State) ->
@@ -160,20 +153,20 @@ verify_public_ip(Ip) ->
 
 verify_private_ip(Ip) ->
   case Ip of
-    <<"127", _/binary>> -> ok;
-    <<"10", _/binary>> -> ok;
-    <<"172", _/binary>> -> ok;
-    <<"192", _/binary>> -> ok;
+    <<"127.", _/binary>> -> ok;
+    <<"10.", _/binary>> -> ok;
+    <<"172.", _/binary>> -> ok;
+    <<"192.", _/binary>> -> ok;
     _ -> {error, {not_private_ip, Ip}}
   end.
 
 select_endpoint(Key, State) ->
   {PublicIp, PrivateIp, Port} = Key,
   case State#state.peer_ip of
-    <<"127", _/binary>> -> build_endpoint(PrivateIp, Port);
-    <<"10", _/binary>> -> build_endpoint(PrivateIp, Port);
-    <<"172", _/binary>> -> build_endpoint(PrivateIp, Port);
-    <<"192", _/binary>> -> build_endpoint(PrivateIp, Port);
+    <<"127.", _/binary>> -> build_endpoint(PrivateIp, Port);
+    <<"10.", _/binary>> -> build_endpoint(PrivateIp, Port);
+    <<"172.", _/binary>> -> build_endpoint(PrivateIp, Port);
+    <<"192.", _/binary>> -> build_endpoint(PrivateIp, Port);
     _ -> build_endpoint(PublicIp, Port)
   end.
 
