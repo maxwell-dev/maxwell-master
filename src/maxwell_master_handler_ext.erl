@@ -28,7 +28,7 @@
 init(Req) ->
   HandlerPid = self(),
   State = #state{
-    peer_ip = build_private_ip(Req),
+    peer_ip = extract_peer_ip(Req),
     handler_pid = HandlerPid
   },
   lager:debug("Initializing handler_ext: state: ~p", [State]),
@@ -102,7 +102,14 @@ handle(#resolve_backend_req_t{ref = Ref}, State) ->
       reply(Rep, State);
     false ->
       reply(build_error_rep(backend_not_found, Ref), State)
-  end.
+  end;
+
+%% misc part
+handle(#resolve_ip_req_t{ref = Ref} = Req, State) ->
+  Rep = #resolve_ip_rep_t{
+    ip = binary_to_list(State#state.peer_ip), ref = Ref
+  },
+  reply(Rep, State).
 
 terminate(_Reason, _State) ->
   ok.
@@ -111,22 +118,22 @@ terminate(_Reason, _State) ->
 %%% Internal functions
 %%%===================================================================
 
-build_private_ip(Req) ->
+extract_peer_ip(Req) ->
   Endpoint = maps:get(endpoint, Req),
-  [Ip, _] = parse_endpoint_parts(Endpoint),
+  [Ip, _] = split_endpoint(Endpoint),
   Ip.
 
 build_endpoint(Ip, Port) ->
   lists:concat([binary_to_list(Ip), ":", binary_to_list(Port)]).
 
-parse_endpoint_parts(Endpoint) -> binary:split(Endpoint, <<":">>).
+split_endpoint(Endpoint) -> binary:split(Endpoint, <<":">>).
 
 build_key(#register_frontend_req_t{endpoint = Endpoint}, State) ->
-  [PublicIp, Port] = parse_endpoint_parts(Endpoint),
+  [PublicIp, Port] = split_endpoint(Endpoint),
   PrivateIp = State#state.peer_ip,
   {PublicIp, PrivateIp, Port};
 build_key(#register_backend_req_t{endpoint = Endpoint}, State) ->
-  [PublicIp, Port] = parse_endpoint_parts(Endpoint),
+  [PublicIp, Port] = split_endpoint(Endpoint),
   PrivateIp = State#state.peer_ip,
   {PublicIp, PrivateIp, Port}.
 

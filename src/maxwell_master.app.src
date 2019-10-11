@@ -7,8 +7,6 @@
       kernel,
       stdlib,
       lager,
-%%      lifebook,
-%%      guid,
       maxwell_protocol,
       maxwell_server
     ]},

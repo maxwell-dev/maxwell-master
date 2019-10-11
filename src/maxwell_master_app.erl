@@ -34,8 +34,6 @@
   {error, Reason :: term()}).
 start(_StartType, _StartArgs) ->
   {ok, _} = application:ensure_all_started(lager),
-%%  {ok, _} = application:ensure_all_started(lifebook),
-%%  {ok, _} = application:ensure_all_started(guid),
   {ok, _} = application:ensure_all_started(maxwell_server),
   {ok, _} = maxwell_master_sup:start_link().
 
