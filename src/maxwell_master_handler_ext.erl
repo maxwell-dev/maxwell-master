@@ -105,7 +105,7 @@ handle(#resolve_backend_req_t{ref = Ref}, State) ->
   end;
 
 %% misc part
-handle(#resolve_ip_req_t{ref = Ref} = Req, State) ->
+handle(#resolve_ip_req_t{ref = Ref}, State) ->
   Rep = #resolve_ip_rep_t{
     ip = binary_to_list(State#state.peer_ip), ref = Ref
   },
