@@ -2,15 +2,15 @@
 [{<<"cowboy">>,{pkg,<<"cowboy">>,<<"2.7.0">>},1},
  {<<"cowlib">>,{pkg,<<"cowlib">>,<<"2.8.0">>},2},
  {<<"goldrush">>,{pkg,<<"goldrush">>,<<"0.1.9">>},1},
- {<<"gpb">>,{pkg,<<"gpb">>,<<"4.10.4">>},1},
+ {<<"gpb">>,{pkg,<<"gpb">>,<<"4.10.6">>},1},
  {<<"lager">>,{pkg,<<"lager">>,<<"3.8.0">>},0},
  {<<"maxwell_protocol">>,
   {git,"https://github.com/maxwell-dev/maxwell-protocol-erlang.git",
-       {ref,"cbf749415590eac2785cbba195c503265ec0d6cc"}},
+       {ref,"3c4847edce3a2796007640c24c0151e5d7b1870b"}},
   0},
  {<<"maxwell_server">>,
   {git,"https://github.com/maxwell-dev/maxwell-server.git",
-       {ref,"54cde6c5dc1dcd04b7311da60a4d82fcd2af9c2f"}},
+       {ref,"cc56276d79d50f460ce277561817ae4768d0c5fb"}},
   0},
  {<<"ranch">>,{pkg,<<"ranch">>,<<"1.7.1">>},2}]}.
 [
@@ -18,7 +18,7 @@
  {<<"cowboy">>, <<"91ED100138A764355F43316B1D23D7FF6BDB0DE4EA618CB5D8677C93A7A2F115">>},
  {<<"cowlib">>, <<"FD0FF1787DB84AC415B8211573E9A30A3EBE71B5CBFF7F720089972B2319C8A4">>},
  {<<"goldrush">>, <<"F06E5D5F1277DA5C413E84D5A2924174182FB108DABB39D5EC548B27424CD106">>},
- {<<"gpb">>, <<"A83BEC05F331E2413E883930A104B1E167B1C1BE6A74244F68DC00911563CF1C">>},
+ {<<"gpb">>, <<"B3A63111C914DDBF74B9C7CF813F7BA4CC26F8A8A630B6A418202119ADD146B4">>},
  {<<"lager">>, <<"3402B9A7E473680CA179FC2F1D827CAB88DD37DD1E6113090C6F45EF05228A1C">>},
  {<<"ranch">>, <<"6B1FAB51B49196860B733A49C07604465A47BDB78AA10C1C16A3D199F7F8C881">>}]}
 ].
