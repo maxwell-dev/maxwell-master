@@ -45,6 +45,7 @@ handle(#register_frontend_req_t{ref = Ref} = Req, State) ->
     Error ->
       reply(build_error_rep(Error, Ref), State)
   end;
+
 handle(#push_routes_req_t{types = Types, ref = Ref}, State) ->
   case State#state.server_port =/= undefined of
     true ->
@@ -57,6 +58,7 @@ handle(#push_routes_req_t{types = Types, ref = Ref}, State) ->
     false ->
       reply(build_error_rep(not_registered_yet, Ref), State)
   end;
+
 handle(#pull_routes_req_t{ref = Ref}, State) ->
   case State#state.server_port =/= undefined of
     true ->
@@ -92,16 +94,26 @@ handle(#resolve_frontend_req_t{ref = Ref}, State) ->
     false ->
       reply(build_error_rep(frontend_not_found, Ref), State)
   end;
-handle(#resolve_backend_req_t{ref = Ref}, State) ->
-  Key = maxwell_master_backend_mgr:fetch(),
-  case Key =/= undefined of
-    true ->
-      Rep = #resolve_backend_rep_t{
+
+handle(#resolve_backend_req_t{topic = Topic, ref = Ref}, State) ->
+  case maxwell_master_mapping_store:get(Topic) of
+    {ok, Key} ->
+      lager:debug("Found persistent mapping: key: ~p, topic: ~p", [Key, Topic]),
+      reply(#resolve_backend_rep_t{
         endpoint = select_endpoint(Key, State), ref = Ref
-      },
-      reply(Rep, State);
-    false ->
-      reply(build_error_rep(backend_not_found, Ref), State)
+      }, State);
+    _ ->
+      Key = maxwell_master_backend_mgr:fetch(),
+      case Key =/= undefined of
+        true ->
+          lager:debug("Persisting mapping: key: ~p, topic: ~p", [Key, Topic]),
+          ok = maxwell_master_mapping_store:add(Topic, Key),
+          reply(#resolve_backend_rep_t{
+            endpoint = select_endpoint(Key, State), ref = Ref
+          }, State);
+        false ->
+          reply(build_error_rep(backend_not_found, Ref), State)
+      end
   end;
 
 %% misc part
@@ -188,9 +200,7 @@ build_pull_routes_rep(Routes, Ref) ->
 build_route_groups(Routes) ->
   dict:fold(
     fun(Type, Endpoints, RouteGroups) ->
-      [
-        #route_group_t{type = Type, endpoints = Endpoints} | RouteGroups
-      ]
+      [#route_group_t{type = Type, endpoints = Endpoints} | RouteGroups]
     end, [], Routes
   ).
 

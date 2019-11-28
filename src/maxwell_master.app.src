@@ -7,6 +7,7 @@
       kernel,
       stdlib,
       lager,
+      rocksdb,
       maxwell_protocol,
       maxwell_server
     ]},

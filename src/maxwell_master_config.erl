@@ -10,4 +10,9 @@
 
 %% API
 -export([
+  get_mapping_store_dir/0
 ]).
+
+get_mapping_store_dir() ->
+  {ok, DataDir} = application:get_env(maxwell_master, mapping_store_dir),
+  string:strip(DataDir, right, $/).

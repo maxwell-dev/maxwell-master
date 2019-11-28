@@ -39,6 +39,7 @@ start_link() ->
 init([]) ->
   SupFlags = #{strategy => one_for_one, intensity => 10, period => 60},
   ChildSpecs = [
+    ?SPEC(maxwell_master_mapping_store, worker),
     ?SPEC(maxwell_master_frontend_mgr, worker),
     ?SPEC(maxwell_master_backend_mgr, worker),
     ?SPEC(maxwell_master_route_mgr, worker)

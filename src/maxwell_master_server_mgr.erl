@@ -131,6 +131,7 @@ init_state(ServerName) ->
   }.
 
 add_and_monitor2(Key, Pid, State) ->
+  lager:info("!!!!!!!!!!!!!!!!!add_and_monitor2: ~p", [Key]),
   {_, _, State2} = remove_by_key(Key, State),
   Ref = monitor(process, Pid),
   State3 = State2#state{
