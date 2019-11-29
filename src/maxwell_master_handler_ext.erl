@@ -149,35 +149,31 @@ build_key(#register_backend_req_t{endpoint = Endpoint}, State) ->
   PrivateIp = State#state.peer_ip,
   {PublicIp, PrivateIp, Port}.
 
-verify_key({PublicIp, PrivateIp, _}) ->
-  case verify_public_ip(PublicIp) of
-    ok ->
-      case verify_private_ip(PrivateIp) of
-        ok -> ok;
-        Error -> Error
-      end;
-    Error -> Error
+verify_key(Key) ->
+  case Key of
+    {_, _, _} -> ok;
+    _ -> invalid_key_format
   end.
 
-verify_public_ip(Ip) ->
-  case verify_private_ip(Ip) of
-    ok -> {error, {not_public_ip, Ip}};
-    {error, _} ->
-      case Ip of
-        <<"0.0.0.0">> ->
-          {error, uninitialized_public_ip, Ip};
-        _ -> ok
-      end
-  end.
+% verify_public_ip(Ip) ->
+%   case verify_private_ip(Ip) of
+%     ok -> {error, {not_public_ip, Ip}};
+%     {error, _} ->
+%       case Ip of
+%         <<"0.0.0.0">> ->
+%           {error, uninitialized_public_ip, Ip};
+%         _ -> ok
+%       end
+%   end.
 
-verify_private_ip(Ip) ->
-  case Ip of
-    <<"127.", _/binary>> -> ok;
-    <<"10.", _/binary>> -> ok;
-    <<"172.", _/binary>> -> ok;
-    <<"192.", _/binary>> -> ok;
-    _ -> {error, {not_private_ip, Ip}}
-  end.
+% verify_private_ip(Ip) ->
+%   case Ip of
+%     <<"127.", _/binary>> -> ok;
+%     <<"10.", _/binary>> -> ok;
+%     <<"172.", _/binary>> -> ok;
+%     <<"192.", _/binary>> -> ok;
+%     _ -> {error, {not_private_ip, Ip}}
+%   end.
 
 select_endpoint(Key, State) ->
   {PublicIp, PrivateIp, Port} = Key,

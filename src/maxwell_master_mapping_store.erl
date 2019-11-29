@@ -127,7 +127,7 @@ get2(Topic, State) ->
   case rocksdb:get(State#state.db_ref, Topic, []) of
     {ok, Key} ->
       Parts = binary:split(Key, <<":">>, [global]),
-      {lists:nth(1, Parts), lists:nth(2, Parts), lists:nth(3, Parts)};
+      {ok, {lists:nth(1, Parts), lists:nth(2, Parts), lists:nth(3, Parts)}};
     Error -> 
       Error
   end.
